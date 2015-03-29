@@ -199,7 +199,7 @@ public class MegaHal
 			return; // there is nothing we can learn from this
 
 		/*
-		This for-loop serves the purpose of creating overlappng TokenGroup's of the specified markovLength out of the
+		This for-loop serves the purpose of creating overlapping TokenGroup's of the specified markovLength out of the
 		list of tokens.
 
 		For example, with the indexes of tokens from the above example and the default length of 4, the result would be
