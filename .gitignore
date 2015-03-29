@@ -1,36 +1,37 @@
-# Eclipse stuff
+#########################
+### OS Specific Files ###
+#########################
+
+# Mac filesystem metadata
+.DS_Store
+
+
+########################
+### IDE/Editor Files ###
+########################
+
+# Eclise
 /.classpath
 /.project
 /.settings
 
-# netbeans
+# Netbeans
 /nbproject
 
-# we use maven!
-/build.xml
-
-# maven
-/target
-
-# vim
-.*.sw[a-p]
-
-# various other potential build files
-/build
-/bin
-/dist
-/manifest.mf
-
-# Mac filesystem dust
-/.DS_Store
-
-# intellij
+# IntelliJ
 *.iml
 *.ipr
 *.iws
 .idea/
 
-*.DS_Store
-*/Ds_Store
+# Vim
+.*.sw[a-p]
 
-.gradle
+
+#####################
+### Build Process ###
+#####################
+
+# Maven
+/build.xml
+/target
