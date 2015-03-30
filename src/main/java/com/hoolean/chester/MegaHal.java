@@ -112,6 +112,30 @@ public class MegaHal
 		{
 			return this.hashCode;
 		}
+
+		@Override
+		public boolean equals(Object obj)
+		{
+			if (!(obj instanceof TokenGroup))
+				return false;
+
+			// TODO: ensure lengths are equal
+
+			// ensure all tokens are equal in this token to the equivalent tokens in the other TokenGroup
+			TokenGroup other = (TokenGroup) obj;
+			for (int i = 0; i < this.tokens.length; i++)
+			{
+				// if one of them is not equal
+				if (!this.tokens[i].equals(other.getToken(i)))
+				{
+					// then the TokenGroups cannot be equal
+					return false;
+				}
+			}
+
+			// all tokens are equal, hence the TokenGroups are equal
+			return true;
+		}
 	}
 
 	/**
@@ -314,7 +338,7 @@ public class MegaHal
 			if (!last)
 			{
 				// the first token of the next TokenGroup, AKA the token after the last token in this TokenGroup
-				String nextToken = messageTokens.get(startingIndex + 1);
+				String nextToken = messageTokens.get(startingIndex + this.markovLength);
 
 				// if this TokenGroup has no list of following tokens
 				if (!nextTokenMap.containsKey(tokenGroup))
@@ -352,6 +376,12 @@ public class MegaHal
 	{
 		// all of the tokens in the provided message
 		List<String> messageTokens = this.getTokens(message);
+
+		// if there are no tokens, just send a message that is not based on the tokens
+		if (messageTokens.size() == 0)
+		{
+			return this.getBestMessageFromMessage(null);
+		}
 
 		// return a reply based on a Random token in the message
 		return this.getBestMessageFromToken(messageTokens.get(this.random.nextInt(messageTokens.size())));
@@ -437,7 +467,7 @@ public class MegaHal
 			iteratingTokenGroup = this.tokenGroupMap.get(new TokenGroup(searchTokens.toArray(new String[searchTokens.size()])));
 		}
 
-		// intialise the token group being iterated over to the middleGroup once more to begin searching for preceding
+		// initialise the token group being iterated over to the middleGroup once more to begin searching for preceding
 		// tokens
 		iteratingTokenGroup = middleTokenGroup;
 
@@ -454,8 +484,8 @@ public class MegaHal
 			// a random Token from this List
 			String previousToken = potentialPreviousTokens.get(random.nextInt(potentialPreviousTokens.size()));
 
-			// add this randomly selected Token to the tokens to be in the message so far (at the end)
-			messageTokens.add(previousToken);
+			// add this randomly selected Token to the tokens to be in the message so far (at the beginning)
+			messageTokens.add(0, previousToken);
 
 			/*
 			The TokenGroup that will be used to find the next token. It is the first three tokens of the current
@@ -479,7 +509,6 @@ public class MegaHal
 			searchTokens.add(previousToken);
 			searchTokens.addAll(iteratingTokenGroup.toList().subList(0, iteratingTokenGroup.toList().size() - 1));
 			iteratingTokenGroup = this.tokenGroupMap.get(new TokenGroup(searchTokens.toArray(new String[searchTokens.size()])));
-			messageTokens.add(0, previousToken);
 		}
 
 		// join all messageTokens into a message
