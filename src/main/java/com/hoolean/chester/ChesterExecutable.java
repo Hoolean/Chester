@@ -5,6 +5,7 @@ import org.kitteh.irc.client.library.ClientBuilder;
 
 import java.io.*;
 import java.util.Properties;
+import java.util.function.Consumer;
 
 public class ChesterExecutable
 {
@@ -82,6 +83,20 @@ public class ChesterExecutable
 		{
 			client.addChannel(channel.trim());
 		}
+
+		// TODO: consider changing Consumer to lambda
+
+		client.setExceptionListener(new Consumer<Exception>()
+		{
+			@Override
+			public void accept(Exception e)
+			{
+				e.printStackTrace();
+			}
+		});
+
+		// register a Listener to cause Chester to learn and reply to messages in channels he joins
+		client.getEventManager().registerEventListener(new ConverseListener(new MegaHal()));
 	}
 
 	private static Properties getProperties()
