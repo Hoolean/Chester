@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 
 public class ChesterExecutable
 {
+	// keys and default values for the config
 	private static final String PROPERTY_KEY_NICK = "name";
 	private static final String PROPERTY_DEFAULT_NICK = "Chester";
 
@@ -21,6 +22,11 @@ public class ChesterExecutable
 	private static final String PROPERTY_KEY_CHANNELS = "channels";
 	private static final String PROPERTY_DEFAULT_CHANNELS = "#drtshock, #hawkfalcon";
 
+	/**
+	 * Starts a Chester IRC client with the settings found in config.properties.
+	 *
+	 * @param args The command line arguments called with it
+	 */
 	public static void main(String[] args)
 	{
 		// TODO: support all properties
@@ -86,6 +92,7 @@ public class ChesterExecutable
 
 		// TODO: consider changing Consumer to lambda
 
+		// log any Exceptions
 		client.setExceptionListener(new Consumer<Exception>()
 		{
 			@Override
@@ -99,11 +106,17 @@ public class ChesterExecutable
 		client.getEventManager().registerEventListener(new ConverseListener(new MegaHal()));
 	}
 
+	/**
+	 * Gets the properties at config.properties else creates the file with default value.
+	 *
+	 * @return The Properties found, else the default Properties
+	 */
 	private static Properties getProperties()
 	{
 		// TODO: remove unnecessary timestamp
 		// TODO: have values unescaped
 
+		// the default config location
 		File configFile = new File("config.properties");
 		Properties properties = new Properties();
 		boolean createDefault = false;

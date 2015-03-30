@@ -36,6 +36,5 @@ Todo
 ----
 
 - Allow all configuration options
-- Link AI to the IRC client
 - Add commands
 - Base command auth on those with permissions in #chester
