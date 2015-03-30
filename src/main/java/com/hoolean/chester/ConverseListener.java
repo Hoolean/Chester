@@ -4,6 +4,8 @@ import org.kitteh.irc.client.library.element.Channel;
 import org.kitteh.irc.client.library.event.channel.ChannelMessageEvent;
 import org.kitteh.irc.lib.net.engio.mbassy.listener.Handler;
 
+import java.io.*;
+
 public class ConverseListener
 {
 	/**
@@ -19,14 +21,20 @@ public class ConverseListener
 	private final MegaHal megaHal;
 
 	/**
+	 * The file to save sentences to, allowing permanence in the learning of MegaHal.
+	 */
+	private final File brainFile;
+
+	/**
 	 * Create an instance of ConverseListener with the desired instance of MegaHal to teach and use for generating
 	 * responses.
 	 *
 	 * @param megaHal The instance of MegaHal to teach and use for generating responses
 	 */
-	public ConverseListener(MegaHal megaHal)
+	public ConverseListener(MegaHal megaHal, File brainFile)
 	{
 		this.megaHal = megaHal;
+		this.brainFile = brainFile;
 	}
 
 	/**
@@ -64,6 +72,18 @@ public class ConverseListener
 		else // if should learn from message
 		{
 			this.megaHal.addMessage(message);
+
+			try
+			{
+				// store the message to a File
+				PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(this.brainFile)));
+				printWriter.println(message);
+			}
+			catch (IOException e)
+			{
+				System.err.println("Could not append message to a file.");
+				e.printStackTrace();
+			}
 		}
 	}
 

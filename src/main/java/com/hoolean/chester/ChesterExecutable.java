@@ -5,6 +5,7 @@ import org.kitteh.irc.client.library.ClientBuilder;
 
 import java.io.*;
 import java.util.Properties;
+import java.util.Scanner;
 import java.util.function.Consumer;
 
 public class ChesterExecutable
@@ -21,6 +22,8 @@ public class ChesterExecutable
 
 	private static final String PROPERTY_KEY_CHANNELS = "channels";
 	private static final String PROPERTY_DEFAULT_CHANNELS = "#drtshock, #hawkfalcon";
+
+	private static final String DEFAULT_BRAIN = "Hello World\nCan I have some coffee?\nPlease slap me";
 
 	/**
 	 * Starts a Chester IRC client with the settings found in config.properties.
@@ -102,8 +105,29 @@ public class ChesterExecutable
 			}
 		});
 
+		// create an instance of MegaHal to learn and reply
+		MegaHal hal = new MegaHal();
+
+		// the defaul brain file
+		File brainFile = new File("brain.txt");
+		Scanner brainScanner;
+		try
+		{
+			brainScanner = new Scanner(brainFile);
+		}
+		catch (FileNotFoundException e)
+		{
+			brainScanner = new Scanner(DEFAULT_BRAIN);
+		}
+
+		// load each sentence
+		while (brainScanner.hasNextLine())
+		{
+			hal.addMessage(brainScanner.nextLine());
+		}
+
 		// register a Listener to cause Chester to learn and reply to messages in channels he joins
-		client.getEventManager().registerEventListener(new ConverseListener(new MegaHal()));
+		client.getEventManager().registerEventListener(new ConverseListener(hal, brainFile));
 	}
 
 	/**
